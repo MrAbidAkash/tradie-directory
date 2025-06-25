@@ -1,8 +1,14 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Phone, Mail, MapPin, Star, Clock, Award, Shield } from "lucide-react"
-import { notFound } from "next/navigation"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Phone, Mail, MapPin, Star, Clock, Award, Shield } from "lucide-react";
+import { notFound } from "next/navigation";
 
 // Mock data - replace with actual database fetch
 const mockListing = {
@@ -31,21 +37,21 @@ const mockListing = {
     emergency: 8,
     maintenance: 6,
   },
-}
+};
 
 interface PageProps {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }
 
 export default async function ListingPage({ params }: PageProps) {
-  const { id } = await params
+  const { id } = await params;
 
   // In a real app, fetch from database
   if (id !== "1") {
-    notFound()
+    notFound();
   }
 
-  const listing = mockListing
+  const listing = mockListing;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -54,7 +60,9 @@ export default async function ListingPage({ params }: PageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">TradieDirectory</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                TradieDirectory
+              </h1>
             </div>
             <Button variant="outline">Back to Search</Button>
           </div>
@@ -84,8 +92,12 @@ export default async function ListingPage({ params }: PageProps) {
                 <div className="flex items-center gap-4 mt-4">
                   <div className="flex items-center gap-1">
                     <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    <span className="font-medium text-lg">{listing.rating}</span>
-                    <span className="text-gray-500">({listing.reviews} reviews)</span>
+                    <span className="font-medium text-lg">
+                      {listing.rating}
+                    </span>
+                    <span className="text-gray-500">
+                      ({listing.reviews} reviews)
+                    </span>
                   </div>
                   <Badge variant="outline" className="flex items-center gap-1">
                     <Shield className="h-3 w-3" />
@@ -95,7 +107,9 @@ export default async function ListingPage({ params }: PageProps) {
               </CardHeader>
 
               <CardContent>
-                <p className="text-gray-700 leading-relaxed">{listing.description}</p>
+                <p className="text-gray-700 leading-relaxed">
+                  {listing.description}
+                </p>
               </CardContent>
             </Card>
 
@@ -187,20 +201,29 @@ export default async function ListingPage({ params }: PageProps) {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {Object.entries(listing.jobPreferences).map(([type, rating]) => (
-                    <div key={type} className="flex justify-between items-center">
-                      <span className="capitalize">{type}</span>
-                      <div className="flex items-center gap-1">
-                        {[...Array(10)].map((_, i) => (
-                          <div
-                            key={i}
-                            className={`w-2 h-2 rounded-full ${i < rating ? "bg-blue-600" : "bg-gray-200"}`}
-                          />
-                        ))}
-                        <span className="ml-2 text-sm text-gray-600">{rating}/10</span>
+                  {Object.entries(listing.jobPreferences).map(
+                    ([type, rating]) => (
+                      <div
+                        key={type}
+                        className="flex justify-between items-center"
+                      >
+                        <span className="capitalize">{type}</span>
+                        <div className="flex items-center gap-1">
+                          {[...Array(10)].map((_, i) => (
+                            <div
+                              key={i}
+                              className={`w-2 h-2 rounded-full ${
+                                i < rating ? "bg-blue-600" : "bg-gray-200"
+                              }`}
+                            />
+                          ))}
+                          <span className="ml-2 text-sm text-gray-600">
+                            {rating}/10
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -208,5 +231,5 @@ export default async function ListingPage({ params }: PageProps) {
         </div>
       </main>
     </div>
-  )
+  );
 }
