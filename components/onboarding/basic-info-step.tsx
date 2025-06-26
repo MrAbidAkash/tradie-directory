@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface BasicInfoStepProps {
-  data: any
-  onChange: (data: any) => void
+  data: any;
+  onChange: (data: any) => void;
 }
 
 export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
@@ -14,8 +14,8 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
     onChange({
       ...data,
       [field]: value,
-    })
-  }
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -24,8 +24,8 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
           <Label htmlFor="name">Business Name *</Label>
           <Input
             id="name"
-            value={data.name}
-            onChange={(e) => handleChange("name", e.target.value)}
+            value={data.businessName}
+            onChange={(e) => handleChange("businessName", e.target.value)}
             placeholder="e.g., Paul's Plumbing Co."
             required
           />
@@ -47,8 +47,8 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
           <Input
             id="phone"
             type="tel"
-            value={data.phone}
-            onChange={(e) => handleChange("phone", e.target.value)}
+            value={data.businessPhone}
+            onChange={(e) => handleChange("businessPhone", e.target.value)}
             placeholder="(02) 9876 5432"
             required
           />
@@ -59,8 +59,8 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
           <Input
             id="email"
             type="email"
-            value={data.email}
-            onChange={(e) => handleChange("email", e.target.value)}
+            value={data.businessEmail}
+            onChange={(e) => handleChange("businessEmail", e.target.value)}
             placeholder="contact@business.com.au"
             required
           />
@@ -78,5 +78,5 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
         />
       </div>
     </div>
-  )
+  );
 }

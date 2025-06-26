@@ -1,4 +1,5 @@
-import { connectToDatabase } from "../lib/mongodb.js";
+import connectToDatabase from "@/lib/mongodb";
+
 const seedData = [
   {
     name: "Paul's Plumbing Co.",
