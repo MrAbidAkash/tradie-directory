@@ -1,17 +1,19 @@
-import connectToDatabase from "@/lib/mongodb";
 import { type NextRequest, NextResponse } from "next/server";
+// import { connectToDatabase } from "@/lib/mongodb";
 
 export async function POST(request: NextRequest) {
   try {
     const payload = await request.json();
-    const { db } = await connectToDatabase();
+    // const { db } = await connectToDatabase();
 
-    // Log the webhook payload
-    await db.collection("webhook-logs").insertOne({
-      source: "gohighlevel",
-      payload,
-      receivedAt: new Date(),
-    });
+    console.log("GoHighLevel webhook received:", payload);
+
+    // // Log the webhook payload
+    // await db.collection("webhook-logs").insertOne({
+    //   source: "gohighlevel",
+    //   payload,
+    //   receivedAt: new Date(),
+    // });
 
     console.log("GoHighLevel webhook received:", payload);
 
@@ -37,14 +39,14 @@ export async function POST(request: NextRequest) {
         updatedAt: new Date(),
       };
 
-      // Upsert the listing
-      await db
-        .collection("listings")
-        .updateOne(
-          { ghlContactId: contact.id },
-          { $set: listingData },
-          { upsert: true },
-        );
+      // // Upsert the listing
+      // await db
+      //   .collection("listings")
+      //   .updateOne(
+      //     { ghlContactId: contact.id },
+      //     { $set: listingData },
+      //     { upsert: true },
+      //   );
 
       console.log("Listing upserted from GoHighLevel webhook");
     }

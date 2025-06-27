@@ -20,6 +20,7 @@ export interface IListing {
   rating: number;
   reviews: number;
   status: "active" | "inactive" | "pending"; // extend as needed
+  fileUrls: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +46,7 @@ const listingSchema = new mongoose.Schema<IListing>(
       enum: ["active", "inactive", "pending"],
       default: "pending",
     },
+    fileUrls: { type: [String], default: [] },
   },
   { timestamps: true },
 );

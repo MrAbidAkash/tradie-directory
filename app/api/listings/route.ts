@@ -3,7 +3,9 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const { db } = await connectToDatabase();
+    // Connect to database first
+    const mongoose = await connectToDatabase();
+    const db = mongoose.connection;
     const listings = await db.collection("listings").find({}).toArray();
 
     return NextResponse.json(listings);

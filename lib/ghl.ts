@@ -30,11 +30,15 @@ export async function getGHLContactDetails(contactId: string) {
 export async function setGHLField(contactId: string, value: any) {
   const url = `https://rest.gohighlevel.com/v1/contacts/${contactId}`;
 
+  console.log("url FormComplete:", url);
+
   const payload = {
     customField: {
       tCbXnBRMYkXGsP1u3OrJ: value, // Your custom field ID
+      IZtchawthhvBVr0zRo3M: "ApprovedByAI",
     },
   };
+  console.log("payload  FormComplete:", payload);
 
   const res = await fetch(url, {
     method: "PUT",
@@ -45,6 +49,9 @@ export async function setGHLField(contactId: string, value: any) {
     },
     body: JSON.stringify(payload),
   });
+
+  const responseData = await res.json();
+  console.log("GHL Form Responseomplete:", responseData);
 
   if (!res.ok) {
     throw new Error(`GHL API Error: ${res.status}`);

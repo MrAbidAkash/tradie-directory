@@ -140,6 +140,8 @@ export default function NewListingPage() {
         jobPreferences: formData.jobPreferences,
         // Add contactId if available
         ...(contactId && { contactId }),
+        // Add uploadedFileUrls if available
+        ...(uploadedFileUrls.length > 0 && { fileUrls: uploadedFileUrls }),
       };
 
       // 3. Submit to backend
@@ -148,6 +150,7 @@ export default function NewListingPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           listingData,
+          contactId,
         }),
       });
 
@@ -164,7 +167,7 @@ export default function NewListingPage() {
         }
 
         // Redirect to success page with listing ID
-        router.push(`/success?listingId=${result.listingId}`);
+        // router.push(`/success?listingId=${result.listingId}`);
       } else {
         setSubmitError(result.error || "Submission failed");
       }
