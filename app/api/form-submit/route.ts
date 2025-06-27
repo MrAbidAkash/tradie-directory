@@ -69,18 +69,19 @@ export async function POST(req: Request) {
       const hashedPassword = await bcrypt.hash(plainPassword, 12);
 
       user = new User({
-        username: listingData.businessEmail,
         firstName: listingData.name.split(" ")[0] || "Business",
         lastName: listingData.name.split(" ").slice(1).join(" ") || "Owner",
         phone: listingData.businessPhone,
         email: listingData.businessEmail,
         address: "Provided in listing",
         password: hashedPassword,
-        role: "partner",
         verified: true,
+        profileComplete: false, // Profile not complete
+        lastReminderSent: null,
+        remindersSent: 0,
       });
 
-      await user.save();
+      user = await user.save();
       isNewUser = true;
     }
 
@@ -128,16 +129,16 @@ export async function POST(req: Request) {
       });
 
       await transporter.sendMail({
-        from: `Partner Support <${process.env.MAIL_FROM}>`,
+        from: `Business Support <${process.env.MAIL_FROM}>`,
         to: user.email,
         subject: "Your Business Portal Access",
         html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">Welcome to Our Partner Program!</h2>
-          <p>Your business listing has been submitted and your partner account has been created.</p>
+          <h2 style="color: #2563eb;">Welcome to Our Portal!</h2>
+          <p>Your business listing has been submitted and your account has been created.</p>
           
           <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>Username:</strong> ${user.email}</p>
+            <p><strong>Username:</strong> ${user.username}</p>
             <p><strong>Temporary Password:</strong> ${plainPassword}</p>
           </div>
           
@@ -145,7 +146,7 @@ export async function POST(req: Request) {
             Please change your password after first login.
           </p>
           
-          <a href="${process.env.NEXT_PUBLIC_BASE_URL}/partner/login" 
+          <a href="${process.env.NEXT_PUBLIC_BASE_URL}/login" 
             style="display: inline-block; background-color: #2563eb; color: white; 
                   padding: 12px 24px; text-decoration: none; border-radius: 4px;
                   font-weight: bold; margin-top: 16px;">
