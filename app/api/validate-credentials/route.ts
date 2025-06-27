@@ -6,7 +6,7 @@ import { validateBusinessCredentials } from "@/lib/ai-validation";
 
 export async function POST(req: Request) {
   try {
-    const { name, services, licenses, insurances, certifications, files } =
+    const { name, abn, services, licenses, insurances, certifications, files } =
       await req.json();
 
     // Mock file handling for validation preview
@@ -16,6 +16,7 @@ export async function POST(req: Request) {
 
     const validationResult = await validateBusinessCredentials({
       name,
+      abn, // Include ABN
       services,
       licenses,
       insurances,

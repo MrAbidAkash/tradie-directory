@@ -1,4 +1,3 @@
-// app/api/form-submit/route.ts
 import { NextResponse } from "next/server";
 import Listings from "@/models/listing";
 import User from "@/models/user";
@@ -21,6 +20,13 @@ export async function POST(req: Request) {
       );
     }
 
+    // ABN Validation
+    if (!listingData.abn) {
+      return NextResponse.json({ error: "ABN is required" }, { status: 400 });
+    }
+
+
+
     if (!listingData.abn) {
       return NextResponse.json({ error: "ABN is required" }, { status: 400 });
     }
@@ -34,26 +40,34 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate business email
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailRegex.test(listingData.businessEmail)) {
-    //   return NextResponse.json(
-    //     { error: "Invalid business email format" },
-    //     { status: 400 },
-    //   );
-    // }
+    // Extract file paths from objects
+    if (listingData.files && Array.isArray(listingData.files)) {
+      listingData.files = listingData.files
+        .map((file: any) => {
+          // Handle different file object structures
+          return file.path || file.url || file;
+        })
+        .filter(Boolean); // Remove any empty values
+    } else if (listingData.files && typeof listingData.files === "object") {
+      // Handle single file object case
+      listingData.files = [
+        listingData.files.path || listingData.files.url || listingData.files,
+      ].filter(Boolean);
+    } else {
+      listingData.files = [];
+    }
 
     // AI Business Credential Validation
-    // const validationResult = await validateBusinessCredentials(listingData);
-    // if (!validationResult.valid) {
-    //   return NextResponse.json(
-    //     {
-    //       error: "Business credential validation failed",
-    //       details: validationResult.message,
-    //     },
-    //     { status: 400 },
-    //   );
-    // }
+    const validationResult = await validateBusinessCredentials(listingData);
+    if (!validationResult.valid) {
+      return NextResponse.json(
+        {
+          error: "Business credential validation failed",
+          details: validationResult.message,
+        },
+        { status: 400 },
+      );
+    }
 
     // Connect to MongoDB
     const mongoose = await connectToDatabase();
@@ -64,15 +78,14 @@ export async function POST(req: Request) {
         { status: 500 },
       );
     }
+
     // Get GHL Contact Details
     let getGHLContactDetail: any;
     let getGHLContactDetailZ: any;
 
     try {
       getGHLContactDetail = await getGHLContactDetails(contactId);
-      getGHLContactDetailZ = getGHLContactDetail.contact
-      
-      console.log("getGHLContactDetail hh:", getGHLContactDetail);
+      getGHLContactDetailZ = getGHLContactDetail.contact;
     } catch (error) {
       console.error("Failed to set GHL field:", error);
     }
@@ -90,13 +103,14 @@ export async function POST(req: Request) {
       user = new User({
         firstName: getGHLContactDetailZ.firstName.split(" ")[0] || "Business",
         lastName:
-          getGHLContactDetailZ.lastName.split(" ").slice(1).join(" ") || "Owner",
+          getGHLContactDetailZ.lastName.split(" ").slice(1).join(" ") ||
+          "Owner",
         phone: getGHLContactDetailZ.phone,
         email: getGHLContactDetailZ.email,
         address: getGHLContactDetailZ.address || getGHLContactDetailZ.country,
         password: hashedPassword,
         verified: true,
-        profileComplete: false, // Profile not complete
+        profileComplete: false,
         lastReminderSent: null,
         remindersSent: 0,
         customFields: getGHLContactDetailZ,
@@ -133,9 +147,7 @@ export async function POST(req: Request) {
     // 3. Handle GHL integration
     if (contactId) {
       try {
-        const setField = await setGHLField(contactId, "FormCompleted");
-
-        console.log("GHL Form Completed ji:", setField);
+        await setGHLField(contactId, "FormCompleted");
       } catch (ghlError) {
         console.error("GHL update error:", ghlError);
       }
@@ -143,8 +155,6 @@ export async function POST(req: Request) {
 
     // 4. Send email to new users
     if (isNewUser && process.env.MAIL_FROM && process.env.MAIL_PASS) {
-      console.log("im in send email");
-
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -163,7 +173,7 @@ export async function POST(req: Request) {
           <p>Your business listing has been submitted and your account has been created.</p>
           
           <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>Username:</strong> ${user.username}</p>
+            <p><strong>Username:</strong> ${user.email}</p>
             <p><strong>Temporary Password:</strong> ${plainPassword}</p>
           </div>
           
@@ -193,7 +203,6 @@ export async function POST(req: Request) {
         </div>
         `,
       });
-      console.log("email sent");
     }
 
     return NextResponse.json({
@@ -215,7 +224,6 @@ export async function POST(req: Request) {
       {
         success: false,
         error: error.message || "Internal server error",
-        code: error.code, // Include MongoDB error code for debugging
       },
       { status: 500 },
     );

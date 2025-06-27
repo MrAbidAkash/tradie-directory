@@ -144,6 +144,8 @@ export default function NewListingPage() {
         ...(uploadedFileUrls.length > 0 && { fileUrls: uploadedFileUrls }),
       };
 
+      console.log("shhshs");
+
       // 3. Submit to backend
       const response = await fetch("/api/form-submit", {
         method: "POST",
@@ -153,26 +155,34 @@ export default function NewListingPage() {
           contactId,
         }),
       });
+      console.log("shhshs 2");
 
       const result = await response.json();
+      console.log("response:", result);
 
       if (result.success) {
         // 4. Mark form as completed in GHL if contactId exists
-        if (contactId) {
-          await fetch("/api/form-start", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contactId, value: "completed" }),
-          });
-        }
+        // if (contactId) {
+        //   await fetch("/api/form-start", {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify({ contactId, value: "completed" }),
+        //   });
+        // }
+
+        alert("Listing submitted successfully!");
 
         // Redirect to success page with listing ID
-        // router.push(`/success?listingId=${result.listingId}`);
+        router.push(`/success?listingId=${result.listingId}`);
       } else {
         setSubmitError(result.error || "Submission failed");
+        console.error("Submission failed:", result.error);
+        alert("Submission failed: " + result.error);
       }
     } catch (error: any) {
       setSubmitError(error.message || "An unexpected error occurred");
+      console.error("An unexpected error occurred:", error);
+      alert("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }
@@ -216,7 +226,9 @@ export default function NewListingPage() {
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">Get Listed</h1>
             </div>
-            <Button variant="outline" onClick={()=> router.push("/")}>Save & Exit</Button>
+            <Button variant="outline" onClick={() => router.push("/")}>
+              Save & Exit
+            </Button>
           </div>
         </div>
       </header>

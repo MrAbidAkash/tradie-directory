@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
-import { connectToDatabase } from "@/lib/mongodb";
+import connectToDatabase from "@/lib/mongodb";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -9,7 +9,8 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const { db } = await connectToDatabase();
+    const mongoose = await connectToDatabase();
+    const db = mongoose.connection;
 
     const listing = await db
       .collection("listings")
