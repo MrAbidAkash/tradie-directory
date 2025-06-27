@@ -26,3 +26,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore all files in uploads
+/public/uploads/*
+
+# But keep the folder
+!public/uploads/.gitkeep
