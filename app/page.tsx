@@ -19,14 +19,14 @@ export default function HomePage() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex flex-col sm:flex-row justify-between items-center py-4 sm:py-0 sm:h-16 gap-3 sm:gap-0">
             <div className="flex items-center">
-              <a href="/" className="text-2xl font-bold text-gray-900">
+              <Link href="/" className="text-2xl font-bold text-gray-900">
                 TradieDirectory
-              </a>
+              </Link>
             </div>
-            <Link href="/listing/new">
-              <Button className="bg-blue-600 hover:bg-blue-700">
+            <Link href="/listing/new" className="w-full sm:w-auto">
+              <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
                 Get Listed Now
               </Button>
             </Link>
@@ -35,18 +35,18 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-blue-600 text-white py-16">
+      <section className="bg-blue-600 text-white py-10 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-4xl font-bold mb-3 sm:mb-4">
             Find Trusted Tradies in Your Area
           </h2>
-          <p className="text-xl mb-8">
+          <p className="text-base sm:text-xl mb-6 sm:mb-8">
             Connect with verified professionals for all your home and business
             needs
           </p>
 
           {/* Search Bar */}
-          <div className="max-w-2xl mx-auto bg-white rounded-lg p-2 flex gap-2">
+          <div className="max-w-2xl mx-auto bg-white rounded-lg p-2 flex flex-col sm:flex-row gap-2">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
@@ -55,7 +55,7 @@ export default function HomePage() {
               />
             </div>
             <Select>
-              <SelectTrigger className="w-48 border-0">
+              <SelectTrigger className="w-full sm:w-48 border-0">
                 <SelectValue placeholder="Select region" />
               </SelectTrigger>
               <SelectContent>
@@ -65,16 +65,18 @@ export default function HomePage() {
                 <SelectItem value="perth">Perth, WA</SelectItem>
               </SelectContent>
             </Select>
-            <Button className="bg-blue-600 hover:bg-blue-700">Search</Button>
+            <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+              Search
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
           {/* Filters Sidebar */}
-          <aside className="w-64 flex-shrink-0">
+          <aside className="w-full sm:w-64 flex-shrink-0">
             <Suspense fallback={<div>Loading filters...</div>}>
               <SearchFilters />
             </Suspense>
@@ -82,11 +84,11 @@ export default function HomePage() {
 
           {/* Listings Grid */}
           <div className="flex-1">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="mb-4 sm:mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
                 Featured Tradies
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-sm sm:text-base">
                 Verified professionals ready to help with your project
               </p>
             </div>
@@ -99,9 +101,9 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12 mt-16">
+      <footer className="bg-gray-800 text-white py-8 sm:py-12 mt-8 sm:mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8">
             <div>
               <h4 className="text-lg font-semibold mb-4">TradieDirectory</h4>
               <p className="text-gray-300">

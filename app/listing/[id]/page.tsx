@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, MapPin, Star, Clock, Award, Shield } from "lucide-react";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 // Mock data - replace with actual database fetch
 const mockListing = {
@@ -60,9 +61,9 @@ export default async function ListingPage({ params }: PageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <a href="/" className="text-2xl font-bold text-gray-900">
+              <Link href="/" className="text-2xl font-bold text-gray-900">
                 TradieDirectory
-              </a>
+              </Link>
             </div>
             <Button variant="outline">Back to Search</Button>
           </div>

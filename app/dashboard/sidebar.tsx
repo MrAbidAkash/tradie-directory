@@ -50,7 +50,7 @@ export function Sidebar({
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-center h-16 px-4 border-b">
-            <div className="text-xl font-bold text-blue-700"><a href="/">TradieDirectory</a></div>
+            <div className="text-xl font-bold text-blue-700"><Link href="/">TradieDirectory</Link></div>
           </div>
 
           <nav className="flex-1 px-2 py-4 space-y-1">

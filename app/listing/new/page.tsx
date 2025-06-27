@@ -216,7 +216,7 @@ export default function NewListingPage() {
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">Get Listed</h1>
             </div>
-            <Button variant="outline">Save & Exit</Button>
+            <Button variant="outline" onClick={()=> router.push("/")}>Save & Exit</Button>
           </div>
         </div>
       </header>
