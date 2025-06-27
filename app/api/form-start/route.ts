@@ -37,6 +37,7 @@ async function setGHLField(contactId: string, value: any) {
   const payload = {
     customField: {
       nc03HsphXNDwpjUH1uS0: value,
+      DIjNhvh7ursbg27zN6rx: "ClickedPreviewLink",
     },
   };
 

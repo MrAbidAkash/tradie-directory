@@ -35,13 +35,13 @@ export async function POST(req: Request) {
     }
 
     // Validate business email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(listingData.businessEmail)) {
-      return NextResponse.json(
-        { error: "Invalid business email format" },
-        { status: 400 },
-      );
-    }
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!emailRegex.test(listingData.businessEmail)) {
+    //   return NextResponse.json(
+    //     { error: "Invalid business email format" },
+    //     { status: 400 },
+    //   );
+    // }
 
     // AI Business Credential Validation
     const validationResult = await validateBusinessCredentials(listingData);
