@@ -25,6 +25,9 @@ const serviceOptions = [
 
 const regionOptions = [
   "Sydney CBD",
+  "North Sydney",
+  "New South Wales",
+  "Victoria",
   "North Shore",
   "Eastern Suburbs",
   "Inner West",

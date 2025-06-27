@@ -16,15 +16,10 @@ export async function getGHLContactDetails(contactId: string) {
 
   const contact = await res.json();
 
+  console.log("getGHLContactDetails:", contact);
+
   // Map GHL fields to your user model
-  return {
-    firstName: contact.firstName || "",
-    lastName: contact.lastName || "",
-    email: contact.email || "",
-    phone: contact.phone || "",
-    address: contact.address || "",
-    // Add other fields as needed
-  };
+  return contact;
 }
 
 export async function setGHLField(contactId: string, value: any) {
@@ -57,5 +52,5 @@ export async function setGHLField(contactId: string, value: any) {
     throw new Error(`GHL API Error: ${res.status}`);
   }
 
-  return res.json();
+  return responseData;
 }

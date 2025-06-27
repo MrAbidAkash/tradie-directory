@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   }
 }
 
-async function setGHLField(contactId: string, value: any) {
+export async function setGHLField(contactId: string, value: any) {
   console.log("Setting GHL Field:", contactId, value);
 
   const url = `https://rest.gohighlevel.com/v1/contacts/${contactId}`;

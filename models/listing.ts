@@ -34,7 +34,7 @@ const listingSchema = new mongoose.Schema<IListing>(
     phone: { type: String, required: true },
     email: { type: String, required: true },
     abn: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String,},
     operatingHours: { type: String, required: true },
     serviceAreas: { type: [String], required: true },
     credentials: { type: [String], default: [] },

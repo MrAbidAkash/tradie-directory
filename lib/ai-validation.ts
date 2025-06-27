@@ -33,12 +33,12 @@ export async function validateBusinessCredentials(
               listingData.name
             } (ABN: ${listingData.abn}):
               
-              Services: ${listingData.services.join(", ")}
-              Regions: ${listingData.regions.join(", ")}
+              Services: ${listingData.services?.join(", ")}
+              Regions: ${listingData.regions?.join(", ")}
               
-              Licenses: ${listingData.licenses.join("\n") || "None"}
-              Insurances: ${listingData.insurances.join("\n") || "None"}
-              Certifications: ${listingData.certifications.join("\n") || "None"}
+              Licenses: ${listingData.licenses?.join("\n") || "None"}
+              Insurances: ${listingData.insurances?.join("\n") || "None"}
+              Certifications: ${listingData.certifications?.join("\n") || "None"}
               
               Please check:
               1. Licenses match the services offered
@@ -54,7 +54,7 @@ export async function validateBusinessCredentials(
 
     // Add uploaded documents as images
     for (const file of listingData.files) {
-      const filePath = path.join(process.cwd(), "public", file);
+      const filePath = path?.join(process.cwd(), "public", file);
       const fileData = await fs.readFile(filePath);
       const base64Image = fileData.toString("base64");
 

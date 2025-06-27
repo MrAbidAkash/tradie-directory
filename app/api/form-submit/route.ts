@@ -44,22 +44,41 @@ export async function POST(req: Request) {
     // }
 
     // AI Business Credential Validation
-    const validationResult = await validateBusinessCredentials(listingData);
-    if (!validationResult.valid) {
-      return NextResponse.json(
-        {
-          error: "Business credential validation failed",
-          details: validationResult.message,
-        },
-        { status: 400 },
-      );
-    }
+    // const validationResult = await validateBusinessCredentials(listingData);
+    // if (!validationResult.valid) {
+    //   return NextResponse.json(
+    //     {
+    //       error: "Business credential validation failed",
+    //       details: validationResult.message,
+    //     },
+    //     { status: 400 },
+    //   );
+    // }
 
     // Connect to MongoDB
     const mongoose = await connectToDatabase();
 
+    if (!mongoose) {
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 500 },
+      );
+    }
+    // Get GHL Contact Details
+    let getGHLContactDetail: any;
+    let getGHLContactDetailZ: any;
+
+    try {
+      getGHLContactDetail = await getGHLContactDetails(contactId);
+      getGHLContactDetailZ = getGHLContactDetail.contact
+      
+      console.log("getGHLContactDetail hh:", getGHLContactDetail);
+    } catch (error) {
+      console.error("Failed to set GHL field:", error);
+    }
+
     // 1. First handle the user
-    let user = await User.findOne({ email: listingData.businessEmail });
+    let user = await User.findOne({ email: getGHLContactDetailZ.email });
     let plainPassword = "";
     let isNewUser = false;
 
@@ -69,16 +88,18 @@ export async function POST(req: Request) {
       const hashedPassword = await bcrypt.hash(plainPassword, 12);
 
       user = new User({
-        firstName: listingData.name.split(" ")[0] || "Business",
-        lastName: listingData.name.split(" ").slice(1).join(" ") || "Owner",
-        phone: listingData.businessPhone,
-        email: listingData.businessEmail,
-        address: "Provided in listing",
+        firstName: getGHLContactDetailZ.firstName.split(" ")[0] || "Business",
+        lastName:
+          getGHLContactDetailZ.lastName.split(" ").slice(1).join(" ") || "Owner",
+        phone: getGHLContactDetailZ.phone,
+        email: getGHLContactDetailZ.email,
+        address: getGHLContactDetailZ.address || getGHLContactDetailZ.country,
         password: hashedPassword,
         verified: true,
         profileComplete: false, // Profile not complete
         lastReminderSent: null,
         remindersSent: 0,
+        customFields: getGHLContactDetailZ,
       });
 
       user = await user.save();
@@ -112,7 +133,9 @@ export async function POST(req: Request) {
     // 3. Handle GHL integration
     if (contactId) {
       try {
-        await setGHLField(contactId, "FormCompleted");
+        const setField = await setGHLField(contactId, "FormCompleted");
+
+        console.log("GHL Form Completed ji:", setField);
       } catch (ghlError) {
         console.error("GHL update error:", ghlError);
       }
@@ -120,6 +143,8 @@ export async function POST(req: Request) {
 
     // 4. Send email to new users
     if (isNewUser && process.env.MAIL_FROM && process.env.MAIL_PASS) {
+      console.log("im in send email");
+
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -168,6 +193,7 @@ export async function POST(req: Request) {
         </div>
         `,
       });
+      console.log("email sent");
     }
 
     return NextResponse.json({

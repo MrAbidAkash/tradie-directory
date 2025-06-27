@@ -16,6 +16,7 @@ export interface IUser extends Document {
   lastReminderSent: Date | null;
   remindersSent: number;
   lastProfileUpdate: Date;
+  customFields?: object;
 }
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -37,6 +38,7 @@ const userSchema = new mongoose.Schema<IUser>(
     lastReminderSent: { type: Date, default: null },
     remindersSent: { type: Number, default: 0 },
     lastProfileUpdate: { type: Date, default: Date.now },
+    customFields: { type: Object, default: {} },
   },
   { timestamps: true },
 );
