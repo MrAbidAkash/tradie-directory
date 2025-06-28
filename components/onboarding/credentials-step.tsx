@@ -10,9 +10,17 @@ import { Plus, X, Upload } from "lucide-react";
 interface CredentialsStepProps {
   data: any;
   onChange: (data: any) => void;
+  onValidationStatusChange: (status: {
+    status: "idle" | "validating" | "valid" | "invalid";
+    message: string;
+  }) => void;
 }
 
-export function CredentialsStep({ data, onChange }: CredentialsStepProps) {
+export function CredentialsStep({
+  data,
+  onChange,
+  onValidationStatusChange,
+}: CredentialsStepProps) {
   const [newLicense, setNewLicense] = useState("");
   const [newInsurance, setNewInsurance] = useState("");
   const [newCertification, setNewCertification] = useState("");
@@ -102,6 +110,11 @@ export function CredentialsStep({ data, onChange }: CredentialsStepProps) {
 
     if (hasCredentials) {
       validateCredentials();
+      if (hasCredentials) {
+        validateCredentials();
+      } else {
+        onValidationStatusChange({ status: "idle", message: "" });
+      }
     } else {
       setValidationStatus({ status: "idle", message: "" });
     }

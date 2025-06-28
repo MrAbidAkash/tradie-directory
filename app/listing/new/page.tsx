@@ -185,6 +185,22 @@ export default function NewListingPage() {
     }
   };
 
+  const [credentialsValidationStatus, setCredentialsValidationStatus] =
+    useState<{
+      status: "idle" | "validating" | "valid" | "invalid";
+      message: string;
+    }>({ status: "idle", message: "" });
+
+  // Compute if credentials are valid
+  const hasCredentials =
+    formData.licenses.length > 0 ||
+    formData.insurances.length > 0 ||
+    formData.certifications.length > 0 ||
+    formData.files.length > 0;
+
+  const isCredentialsValid =
+    !hasCredentials || credentialsValidationStatus.status === "valid";
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
@@ -207,6 +223,7 @@ export default function NewListingPage() {
                 ],
               });
             }}
+            onValidationStatusChange={setCredentialsValidationStatus}
           />
         );
       default:
@@ -284,7 +301,9 @@ export default function NewListingPage() {
           {currentStep === steps.length ? (
             <Button
               onClick={handleSubmit}
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting || (currentStep === 3 && !isCredentialsValid)
+              }
               className="flex items-center gap-2"
             >
               {isSubmitting ? "Processing..." : "Complete Registration"}
