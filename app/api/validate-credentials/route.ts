@@ -6,8 +6,16 @@ import { validateBusinessCredentials } from "@/lib/ai-validation";
 
 export async function POST(req: Request) {
   try {
-    const { name, abn, services, licenses, insurances, certifications, files } =
-      await req.json();
+    const {
+      name,
+      abn,
+      services,
+      regions,
+      licenses,
+      insurances,
+      certifications,
+      files,
+    } = await req.json();
 
     // Mock file handling for validation preview
     const mockFiles = files.map((file: string) => {
@@ -17,6 +25,7 @@ export async function POST(req: Request) {
     const validationResult = await validateBusinessCredentials({
       name,
       abn, // Include ABN
+      regions,
       services,
       licenses,
       insurances,

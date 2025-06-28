@@ -5,8 +5,8 @@ export interface IListing {
   _id: Types.ObjectId;
   user?: Types.ObjectId;
   name: string;
-  service: string;
-  region: string;
+  services: string | string[];
+  regions: string | string[];
   phone: string;
   email: string;
   abn: string;
@@ -28,15 +28,15 @@ export interface IListing {
 const listingSchema = new mongoose.Schema<IListing>(
   {
     user: { type: Schema.Types.ObjectId, ref: "User" },
-    name: { type: String, required: true },
-    service: { type: String, required: true },
-    region: { type: String, required: true },
-    phone: { type: String, required: true },
-    email: { type: String, required: true },
-    abn: { type: String, required: true },
-    description: { type: String,},
-    operatingHours: { type: String, required: true },
-    serviceAreas: { type: [String], required: true },
+    name: { type: String },
+    services: { type: [String] },
+    regions: { type: [String] },
+    phone: { type: String },
+    email: { type: String },
+    abn: { type: String },
+    description: { type: String },
+    operatingHours: { type: String },
+    serviceAreas: { type: [String] },
     credentials: { type: [String], default: [] },
     jobPreferences: { type: Schema.Types.Mixed, default: {} },
     rating: { type: Number, default: 0 },

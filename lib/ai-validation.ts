@@ -72,7 +72,6 @@ export async function validateBusinessCredentials(
       console.log("\n===== PROCESSING UPLOADED FILES =====");
       for (const [index, file] of files.entries()) {
         try {
-          // Extract actual file path
           let filePath = "";
 
           if (typeof file === "string") {
@@ -89,42 +88,52 @@ export async function validateBusinessCredentials(
             continue;
           }
 
-          // Log file processing
-          console.log(`\n[FILE ${index + 1}] Processing:`, filePath);
-          console.log(`- Cleaned path: ${filePath}`);
+          // Remove any URL prefix if present
+          const cleanPath = filePath
+            .replace(/^.*\/public\//, "")
+            .replace(/^.*\/uploads\//, "")
+            .replace(/^\//, ""); // Remove leading slash
 
-          const fullPath = path.join(process.cwd(), "public", filePath);
+          const fullPath = path.join(process.cwd(), "public", cleanPath);
           console.log(`- Full system path: ${fullPath}`);
 
-          const fileData = await fs.readFile(fullPath);
-          const base64Image = fileData.toString("base64");
+          try {
+            const fileData = await fs.readFile(fullPath);
+            const base64Image = fileData.toString("base64");
 
-          // Log image data preview
-          console.log(
-            `- Image data: data:image/jpeg;base64,${base64Image.substring(
-              0,
-              50,
-            )}... [${base64Image.length} chars total]`,
-          );
-          console.log(`- File size: ${Math.round(fileData.length / 1024)}KB`);
-          console.log(`- Document being validated for: ${listingData.name}`);
+            // Only log first 20 characters to avoid clutter
+            console.log(
+              `- Image data: data:image/jpeg;base64,${base64Image.substring(
+                0,
+                20,
+              )}...`,
+            );
+            console.log(`- File size: ${Math.round(fileData.length / 1024)}KB`);
 
-          messages.push({
-            role: "user",
-            content: [
-              {
-                type: "image_url",
-                image_url: {
-                  url: `data:image/jpeg;base64,${base64Image}`,
-                  detail: "high",
+            messages.push({
+              role: "user",
+              content: [
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:image/jpeg;base64,${base64Image}`,
+                    detail: "high",
+                  },
                 },
-              },
-              {
-                type: "text",
-                text: "Validate this document: Does it appear to be a legitimate business credential? Check for official seals, expiration dates, and consistency with the business information.",
-              },
-            ],
-          });
+                {
+                  type: "text",
+                  text: "Validate this document: Does it appear to be a legitimate business credential? Check for official seals, expiration dates, and consistency with the business information.",
+                },
+              ],
+            });
+          } catch (readError) {
+            console.error(
+              `[FILE ${index + 1}] Error reading file:`,
+              filePath,
+              readError,
+            );
+            // Continue validation without this file
+          }
         } catch (fileError) {
           console.error(
             `[FILE ${index + 1}] Error processing file:`,

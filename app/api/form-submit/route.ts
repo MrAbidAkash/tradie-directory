@@ -20,13 +20,29 @@ export async function POST(req: Request) {
       );
     }
 
-    // ABN Validation
-    if (!listingData.abn) {
-      return NextResponse.json({ error: "ABN is required" }, { status: 400 });
+    console.log("Listing Data yy:", listingData);
+    
+    
+    
+    // Add this validation before ABN check
+    if (!listingData.services || listingData.services.length === 0) {
+      return NextResponse.json(
+        { error: "At least one service is required" },
+        { status: 400 },
+      );
+    }
+
+    // Add this validation before ABN check
+    if (!listingData.regions || listingData.regions.length === 0) {
+      return NextResponse.json(
+        { error: "At least one service region is required" },
+        { status: 400 },
+      );
     }
 
 
 
+    // ABN Validation
     if (!listingData.abn) {
       return NextResponse.json({ error: "ABN is required" }, { status: 400 });
     }
@@ -41,18 +57,19 @@ export async function POST(req: Request) {
     }
 
     // Extract file paths from objects
-    if (listingData.files && Array.isArray(listingData.files)) {
+    if (listingData.files) {
+      // Handle different file structures
       listingData.files = listingData.files
         .map((file: any) => {
-          // Handle different file object structures
-          return file.path || file.url || file;
+          if (typeof file === "string") return file;
+          if (file?.path && typeof file.path === "string") return file.path;
+          if (file?.url && typeof file.url === "string") return file.url;
+          if (file?.name && typeof file.name === "string")
+            return `/uploads/${file.name}`;
+          return null;
         })
-        .filter(Boolean); // Remove any empty values
-    } else if (listingData.files && typeof listingData.files === "object") {
-      // Handle single file object case
-      listingData.files = [
-        listingData.files.path || listingData.files.url || listingData.files,
-      ].filter(Boolean);
+        .filter(Boolean)
+        .filter((path: string) => path.startsWith("/"));
     } else {
       listingData.files = [];
     }

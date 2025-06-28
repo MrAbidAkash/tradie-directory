@@ -123,20 +123,17 @@ export default function NewListingPage() {
       // 2. Prepare listing data
       const listingData = {
         name: formData.businessName,
-        service: formData.services.join(", "),
-        region: formData.regions.join(", "),
+        services: formData.services,
+        regions: formData.regions,
         phone: formData.businessPhone,
         email: formData.businessEmail,
         abn: formData.abn,
         description: formData.description,
         operatingHours: formData.operatingHours,
         serviceAreas: formData.regions,
-        credentials: [
-          ...formData.licenses,
-          ...formData.insurances,
-          ...formData.certifications,
-          ...uploadedFileUrls,
-        ],
+        licenses: formData.licenses,
+        insurances: formData.insurances,
+        certifications: formData.certifications,
         jobPreferences: formData.jobPreferences,
         // Add contactId if available
         ...(contactId && { contactId }),
@@ -177,7 +174,7 @@ export default function NewListingPage() {
       } else {
         setSubmitError(result.error || "Submission failed");
         console.error("Submission failed:", result.error);
-        alert("Submission failed: " + result.error);
+        alert("Submission failed: " + result.details);
       }
     } catch (error: any) {
       setSubmitError(error.message || "An unexpected error occurred");
